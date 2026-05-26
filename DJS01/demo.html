@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Podcast Preview Component Demo</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f8fafc;
+      margin: 0;
+      padding: 2rem;
+    }
+
+    h1 {
+      text-align: center;
+      color: #1e293b;
+    }
+
+    .grid-container {
+      display: grid;
+      gap: 1.5rem;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      max-width: 1200px;
+      margin: 2rem auto;
+    }
+
+    .console-log-box {
+      max-width: 1200px;
+      margin: 2rem auto;
+      background: #1e293b;
+      color: #38bdf8;
+      padding: 1rem;
+      border-radius: 8px;
+      font-family: monospace;
+      min-height: 50px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Web Component Demo Page</h1>
+  
+  <div id="podcast-grid" class="grid-container"></div>
+
+  <div class="console-log-box">
+    <span style="color: #94a3b8;">// Click a card to see the event payload here:</span>
+    <div id="console-output">Waiting for click interaction...</div>
+  </div>
+
+  <script type="module">
+    import { PodcastPreview } from "./src/components/PodcastPreview.js";
+
+    const mockPodcasts = [
+      {
+        id: "1",
+        title: "Syntax Error Chronicles",
+        image: "https://picsum.photos/id/1062/500/500",
+        seasons: 4,
+        genres: "1, 3",
+        updated: "2026-05-15T08:00:00.000Z"
+      },
+      {
+        id: "2",
+        title: "The Async Life",
+        image: "https://picsum.photos/id/1069/500/500",
+        seasons: 2,
+        genres: "2",
+        updated: "2026-04-20T14:30:00.000Z"
+      }
+    ];
+
+    const container = document.getElementById("podcast-grid");
+    const output = document.getElementById("console-output");
+
+    mockPodcasts.forEach((show) => {
+      const card = document.createElement("podcast-preview");
+      
+      card.setAttribute("id", show.id);
+      card.setAttribute("title", show.title);
+      card.setAttribute("image", show.image);
+      card.setAttribute("seasons", show.seasons);
+      card.setAttribute("genres", show.genres);
+      card.setAttribute("updated", show.updated);
+
+      container.appendChild(card);
+    });
+
+    container.addEventListener("podcast-select", (event) => {
+      output.innerText = `Event 'podcast-select' received!\n\n${JSON.stringify(event.detail, null, 2)}`;
+    });
+  </script>
+</body>
+</html>
