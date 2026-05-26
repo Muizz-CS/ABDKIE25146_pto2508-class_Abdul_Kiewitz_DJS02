@@ -1,35 +1,30 @@
-import { GenreService } from "../GenreService.js";
-import { DateUtils } from "../DataUtils.js";
 import { createModal } from "../components/createModal.js";
+import "../components/PodcastPreview.js";
 
-/**
- * Component for creating and managing the podcast grid display.
- */
 export const createGrid = () => {
   const container = document.getElementById("podcast-grid");
 
   return {
     render(podcasts) {
       if (!container) return;
-      container.innerHTML = ""; // Clear grid before rendering
+      container.innerHTML = ""; 
 
       podcasts.forEach((show) => {
-        const card = document.createElement("div");
-        card.className = "podcast-card";
+        const card = document.createElement("podcast-preview");
         
-        const genres = GenreService.getNames(show.genres).join(", ");
-        
-        // Build the card HTML structure
-        card.innerHTML = `
-          <img src="${show.image}" alt="${show.title}">
-          <h3>${show.title}</h3>
-          <p>${show.seasons} Seasons</p>
-          <p class="genres">${genres}</p>
-          <small>${DateUtils.format(show.updated)}</small>
-        `;
+        card.setAttribute("id", show.id);
+        card.setAttribute("title", show.title);
+        card.setAttribute("image", show.image);
+        card.setAttribute("seasons", show.seasons);
+        card.setAttribute("genres", show.genres.join(","));
+        card.setAttribute("updated", show.updated);
 
-        // Click event to view specific podcast details
-        card.addEventListener("click", () => createModal.open(show));
+        card.addEventListener("podcast-select", (event) => {
+          const selectedPodcast = event.detail;
+          selectedPodcast.description = show.description;
+          createModal.open(selectedPodcast);
+        });
+
         container.appendChild(card);
       });
     },
